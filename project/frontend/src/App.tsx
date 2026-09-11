@@ -5,13 +5,13 @@ import RegisterPage from "./pages/RegisterPage";
 import OnboardingPage from "./pages/OnboardingPage";
 import DashboardPage from "./pages/DashboardPage";
 import DatasetsPage from "./pages/DatasetsPage";
-import PlaceholderPage from "./pages/PlaceholderPage";
 import SettingsPage from "./pages/SettingsPage";
 import DatasetDetailPage from "./pages/DatasetDetailPage";
 import AgentPage from "./pages/AgentPage";
 import ModelsPage from "./pages/ModelsPage";
 import ExperimentsPage from "./pages/ExperimentsPage";
 import BlockchainPage from "./pages/BlockchainPage";
+import AnalyticsPage from "./pages/AnalyticsPage";
 import AppShell from "./layouts/AppShell";
 
 function isAuthenticated() {
@@ -51,7 +51,7 @@ export default function App() {
         <Route path="/experiments" element={<ExperimentsPage />} />
         <Route path="/models" element={<ModelsPage />} />
         <Route path="/blockchain" element={<BlockchainPage />} />
-        <Route path="/analytics" element={<PlaceholderPage title="Analytics" phase="Phase 11" />} />
+        <Route path="/analytics" element={<AnalyticsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
       </Route>
 

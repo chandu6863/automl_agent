@@ -7,6 +7,7 @@ from app.api.auth import router as auth_router, users_router
 from app.api.datasets import router as datasets_router
 from app.api.agent import router as agent_router
 from app.api.automl import router as automl_router
+from app.api.analytics import router as analytics_router
 from app.core.config import settings
 from app.core.logging import configure_logging
 from app.database.base import Base
@@ -45,6 +46,7 @@ app.include_router(users_router)
 app.include_router(datasets_router)
 app.include_router(agent_router)
 app.include_router(automl_router)
+app.include_router(analytics_router)
 
 # Phase 5/6/7/8/9 routers (agent, experiments, models, blockchain) are added
 # incrementally as those phases are implemented.

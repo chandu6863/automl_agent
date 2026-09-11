@@ -1,4 +1,5 @@
 import { useExpertiseStore } from "../stores/expertiseStore";
+import { Link } from "react-router-dom";
 
 export default function DashboardPage() {
   const level = useExpertiseStore((s) => s.level);
@@ -10,13 +11,11 @@ export default function DashboardPage() {
         <h1 className="font-display mb-2 text-3xl font-semibold">What would you like to predict?</h1>
         <p className="mb-8 text-base-100/60">Start with a dataset and a question. The workspace will handle the technical setup.</p>
         <div className="grid gap-4 sm:grid-cols-3">
-          {["Analyze Dataset", "Build Model", "Explain Results"].map((label) => (
-            <button
-              key={label}
-              className="surface rounded-md p-6 text-left transition hover:-translate-y-1 hover:border-accent"
-            >
+          {[['Analyze Dataset', '/datasets', 'Upload a file and inspect its shape.'], ['Build Model', '/models', 'Compare baseline models with guidance.'], ['Explain Results', '/experiments', 'Review completed runs and metrics.']].map(([label, to, description]) => (
+            <Link key={label} to={to} className="surface rounded-md p-5 text-left transition hover:-translate-y-1 hover:border-accent">
               <div className="font-medium">{label}</div>
-            </button>
+              <div className="mt-2 text-sm leading-5 text-base-100/50">{description}</div>
+            </Link>
           ))}
         </div>
       </div>

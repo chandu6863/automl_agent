@@ -112,6 +112,12 @@ def test_dataset_upload_profile_and_verify(client):
         "Random Forest",
     }
 
+    analytics_resp = client.get("/api/v1/analytics/summary", headers=headers)
+    assert analytics_resp.status_code == 200
+    assert analytics_resp.json()["datasets"]["total"] == 1
+    assert analytics_resp.json()["experiments"]["completed"] == 1
+    assert analytics_resp.json()["models"]["evaluated"] == 2
+
     verify_resp = client.post(f"/api/v1/datasets/{dataset_id}/verify", headers=headers)
     assert verify_resp.status_code == 200
     assert verify_resp.json()["verified"] is True
