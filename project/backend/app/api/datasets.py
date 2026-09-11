@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, status
 from sqlalchemy.orm import Session
 
 from app.automl.profiler import load_dataframe, profile_dataframe
-from app.blockchain.service import register_dataset_mock, verify_dataset_mock
+from app.blockchain.service import register_dataset, verify_dataset
+from app.core.config import settings
 from app.core.deps import get_current_user
 from app.database.session import get_db
 from app.datasets.storage import compute_sha256, save_upload
@@ -56,7 +57,7 @@ async def upload_dataset(
     db.add(metadata)
 
     # Register on the (mock) blockchain ledger
-    chain_result = register_dataset_mock(dataset.id, sha256_hash, version.version_number)
+    chain_result = register_dataset(dataset.id, sha256_hash, version.version_number)
     blockchain_record = BlockchainRecord(
         dataset_version_id=version.id,
         tx_hash=chain_result["tx_hash"],
@@ -182,10 +183,12 @@ async def verify_dataset(
         current_bytes = f.read()
     current_hash = compute_sha256(current_bytes)
 
-    result = verify_dataset_mock(dataset.id, current_hash, version.sha256_hash)
+    result = verify_dataset(dataset.id, current_hash) if settings.DATASET_REGISTRY_CONTRACT_ADDRESS and settings.CHAIN_DEPLOYER_PRIVATE_KEY else {"matches": current_hash == version.sha256_hash, "note": "MOCK verification — configure the local chain for on-chain verification."}
 
     verify_record = BlockchainRecord(
         dataset_version_id=version.id,
+        tx_hash=result.get("tx_hash"),
+        block_number=result.get("block_number"),
         action=ChainAction.DATASET_VERIFIED,
         chain_status=ChainStatus.CONFIRMED if result["matches"] else ChainStatus.FAILED,
     )
@@ -197,5 +200,7 @@ async def verify_dataset(
         "registered_hash": version.sha256_hash,
         "current_hash": current_hash,
         "verified": result["matches"],
+        "tx_hash": result.get("tx_hash"),
+        "block_number": result.get("block_number"),
         "note": result["note"],
     }

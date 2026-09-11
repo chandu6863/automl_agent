@@ -42,8 +42,9 @@ def verify_dataset(dataset_id: str, current_hash: str) -> dict:
     matches, registered_version = contract.functions.verifyDataset(dataset_id, bytes.fromhex(current_hash)).call({"from": account.address})
     tx = contract.functions.verifyDataset(dataset_id, bytes.fromhex(current_hash)).build_transaction({"from": account.address, "nonce": client.eth.get_transaction_count(account.address), "gas": 200000, "gasPrice": client.eth.gas_price})
     signed = account.sign_transaction(tx)
-    client.eth.wait_for_transaction_receipt(client.eth.send_raw_transaction(signed.raw_transaction))
-    return {"matches": matches, "registered_version": registered_version, "note": "Verified against the configured DatasetRegistry contract."}
+    tx_hash = client.eth.send_raw_transaction(signed.raw_transaction)
+    receipt = client.eth.wait_for_transaction_receipt(tx_hash)
+    return {"matches": matches, "registered_version": registered_version, "tx_hash": tx_hash.hex(), "block_number": receipt.blockNumber, "note": "Verified against the configured DatasetRegistry contract."}
 
 
 def register_dataset_mock(dataset_id: str, sha256_hash: str, version: int) -> dict:

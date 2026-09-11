@@ -11,6 +11,7 @@ import DatasetDetailPage from "./pages/DatasetDetailPage";
 import AgentPage from "./pages/AgentPage";
 import ModelsPage from "./pages/ModelsPage";
 import ExperimentsPage from "./pages/ExperimentsPage";
+import BlockchainPage from "./pages/BlockchainPage";
 import AppShell from "./layouts/AppShell";
 
 function isAuthenticated() {
@@ -49,7 +50,7 @@ export default function App() {
         <Route path="/agent" element={<AgentPage />} />
         <Route path="/experiments" element={<ExperimentsPage />} />
         <Route path="/models" element={<ModelsPage />} />
-        <Route path="/blockchain" element={<PlaceholderPage title="Blockchain Ledger" phase="Phase 8/9" />} />
+        <Route path="/blockchain" element={<BlockchainPage />} />
         <Route path="/analytics" element={<PlaceholderPage title="Analytics" phase="Phase 11" />} />
         <Route path="/settings" element={<SettingsPage />} />
       </Route>

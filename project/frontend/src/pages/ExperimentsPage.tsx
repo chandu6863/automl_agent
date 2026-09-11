@@ -7,6 +7,11 @@ interface ModelResult {
   metrics: Record<string, number>;
 }
 
+interface ExperimentIteration {
+  step_name: string;
+  status: string;
+}
+
 interface Experiment {
   id: string;
   task_type: string;
@@ -15,6 +20,7 @@ interface Experiment {
   started_at: string;
   best_model: string | null;
   models: ModelResult[];
+  iterations: ExperimentIteration[];
 }
 
 function metricSummary(metrics: Record<string, number>) {
@@ -59,6 +65,9 @@ export default function ExperimentsPage() {
             </div>
             <div className="mt-5 grid gap-3 md:grid-cols-2">
               {experiment.models.map((model) => <div key={model.name} className={`rounded-md border p-4 ${model.name === experiment.best_model ? "border-accent/60 bg-accent/5" : "border-base-800 bg-base-950/40"}`}><div className="flex flex-wrap justify-between gap-2 text-sm"><span>{model.name}</span>{model.name === experiment.best_model && <span className="text-xs text-accent">Best result</span>}</div><p className="mt-2 text-xs text-base-100/55">{metricSummary(model.metrics)}</p></div>)}
+            </div>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {experiment.iterations.map((iteration) => <span key={iteration.step_name} className="rounded-full border border-status-verified/30 bg-status-verified/10 px-2.5 py-1 text-xs text-status-verified">{iteration.step_name.replace(/_/g, " ")} · {iteration.status}</span>)}
             </div>
           </article>
         ))}

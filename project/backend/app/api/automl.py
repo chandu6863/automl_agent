@@ -8,7 +8,14 @@ from app.automl.engine import run_baselines
 from app.core.deps import get_current_user
 from app.database.session import get_db
 from app.models.dataset import Dataset, DatasetVersion
-from app.models.experiment import Experiment, ExperimentStatus, ModelResult
+from app.models.experiment import (
+    Experiment,
+    ExperimentIteration,
+    ExperimentStatus,
+    ModelResult,
+    StepName,
+    StepStatus,
+)
 from app.models.user import User
 
 router = APIRouter(prefix="/api/v1/automl", tags=["automl"])
@@ -35,6 +42,15 @@ def run_automl(payload: RunAutoMLRequest, current_user: User = Depends(get_curre
     experiment = Experiment(user_id=current_user.id, dataset_version_id=version.id, task_type=result["task_type"], target_column=payload.target_column, status=ExperimentStatus.COMPLETED, completed_at=datetime.now(timezone.utc))
     db.add(experiment)
     db.flush()
+    for step_name in StepName:
+        db.add(
+            ExperimentIteration(
+                experiment_id=experiment.id,
+                step_name=step_name,
+                status=StepStatus.COMPLETED,
+                log_json={"source": "baseline_pipeline"},
+            )
+        )
     model_results = []
     for item in result["results"]:
         model_result = ModelResult(experiment_id=experiment.id, model_name=item["model_name"], metrics_json=item["metrics"], training_time_ms=item["training_time_ms"], hyperparameters_json={})
@@ -51,4 +67,4 @@ def run_automl(payload: RunAutoMLRequest, current_user: User = Depends(get_curre
 @router.get("/experiments")
 def list_automl_experiments(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     experiments = db.query(Experiment).filter(Experiment.user_id == current_user.id).order_by(Experiment.started_at.desc()).all()
-    return [{"id": experiment.id, "task_type": experiment.task_type, "target_column": experiment.target_column, "status": experiment.status, "started_at": experiment.started_at, "best_model": next((model.model_name for model in experiment.model_results if model.id == experiment.best_model_result_id), None), "models": [{"name": model.model_name, "metrics": model.metrics_json} for model in experiment.model_results]} for experiment in experiments]
+    return [{"id": experiment.id, "task_type": experiment.task_type, "target_column": experiment.target_column, "status": experiment.status, "started_at": experiment.started_at, "best_model": next((model.model_name for model in experiment.model_results if model.id == experiment.best_model_result_id), None), "models": [{"name": model.model_name, "metrics": model.metrics_json} for model in experiment.model_results], "iterations": [{"step_name": iteration.step_name, "status": iteration.status} for iteration in experiment.iterations]} for experiment in experiments]

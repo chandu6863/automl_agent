@@ -96,6 +96,22 @@ def test_dataset_upload_profile_and_verify(client):
     assert history_resp.json()["dataset_id"] == dataset_id
     assert len(history_resp.json()["history"]) >= 1
 
+    automl_resp = client.post(
+        "/api/v1/automl/run",
+        json={"dataset_id": dataset_id, "target_column": "churn"},
+        headers=headers,
+    )
+    assert automl_resp.status_code == 201
+    assert automl_resp.json()["best_model"]["name"]
+
+    experiments_resp = client.get("/api/v1/automl/experiments", headers=headers)
+    assert experiments_resp.status_code == 200
+    assert len(experiments_resp.json()) == 1
+    assert {model["name"] for model in experiments_resp.json()[0]["models"]} == {
+        "Logistic Regression",
+        "Random Forest",
+    }
+
     verify_resp = client.post(f"/api/v1/datasets/{dataset_id}/verify", headers=headers)
     assert verify_resp.status_code == 200
     assert verify_resp.json()["verified"] is True
