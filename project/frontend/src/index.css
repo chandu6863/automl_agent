@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    font-family: "DM Sans", "Segoe UI", sans-serif;
+    background: #101316;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+  }
+
+  * {
+    border-color: #293235;
+  }
+
+  body {
+    min-width: 320px;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #101316;
+    background-image: linear-gradient(rgba(215, 243, 107, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(215, 243, 107, 0.035) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  button,
+  a,
+  input {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :focus-visible {
+    outline: 2px solid #d7f36b;
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .surface {
+    @apply border border-base-800 bg-base-900/90;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.18em] text-accent;
+  }
+}
+
+body {
+  font-family: "DM Sans", "Segoe UI", sans-serif;
+}

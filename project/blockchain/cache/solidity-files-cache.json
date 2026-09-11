@@ -1,0 +1,41 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "C:\\Users\\Victus\\OneDrive\\Documents\\Desktop\\PROJECT4.2\\project\\blockchain\\contracts\\DatasetRegistry.sol": {
+      "lastModificationDate": 1789117760666,
+      "contentHash": "64034254c1adb8fe9b4275f2baef08ad",
+      "sourceName": "contracts/DatasetRegistry.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.24"
+      ],
+      "artifacts": [
+        "DatasetRegistry"
+      ]
+    }
+  }
+}
